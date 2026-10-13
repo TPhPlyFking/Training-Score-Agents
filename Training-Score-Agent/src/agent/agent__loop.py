@@ -3,6 +3,7 @@ import asyncio
 import logging
 from pathlib import Path
 from typing import Any, Callable
+from datetime import datetime
 
 from src.agent.tool_schemas import AgentResult
 from src.mcp.mcp_client import MCPClient
@@ -81,7 +82,27 @@ class AgentLoop:
             self.api_handler.generate,
             messages,
         )
+    def _write_usage_log(self, steps:int, calls: int, prompt_tokens:int, completion_tokens: int,
+                         max_prompt: int, tool_calls: list[dict[str,Any]]) -> None:
+        log_dir = Path(__file__).resolve().parents[2] / "logs"
+        log_dir.mkdir(parents=True,exist_ok=True)
 
+        record = {
+            "timestamp":datetime.now().astimezone().isoformat(),
+            "steps" : steps,
+            "tool_calls": tool_calls,
+            "USAGE":{
+                "calls":calls,
+                "prompt_tokens": prompt_tokens,
+                "completion_tokens": completion_tokens,
+                "max_prompt": max_prompt,
+            },
+        }
+        log_path= log_dir / "agent_runs.jsonl"
+        with log_path.open("a",encoding = "utf-8") as file:
+            file.write(
+                json.dumps(record,ensure_ascii=False,default = str) + "\n"
+            )
     async def run (self,question: str) -> AgentResult:
         if not question or not question.strip():
             return AgentResult(
@@ -89,6 +110,11 @@ class AgentLoop:
                 steps = 0,
                 success = False,
             )
+        calls = 0
+        prompt_tokens = 0
+        completion_tokens =0
+        max_prompt = 0
+        tool_calls : list[dict[str,Any]] = []
 
         documents = await self._search_rag(question)
         document_context = self._format_documents(documents)
@@ -136,7 +162,13 @@ Chỉ sử dụng kết quả tool sau khi đã nhận được.
         for step in range (1,self.max_steps +1):
             try:
                 raw_response = await self._ask_llm(messages)
+                usage = self.api_handler.last_usage
+                calls +=1
+                prompt_tokens += usage ["prompt_tokens"]
+                completion_tokens += usage ["completion_tokens"]
+                max_prompt = max(max_prompt, usage ["prompt_tokens"])
                 decision = self._parse_json(raw_response)
+
             except Exception as error:
                 logger.exception("Không xử lí được phản hồi LLM")
 
@@ -155,6 +187,15 @@ Chỉ sử dụng kết quả tool sau khi đã nhận được.
                         steps = step,
                         success = False,
                     )
+
+                self._write_usage_log(
+                    steps = step,
+                    calls = calls,
+                    prompt_tokens= prompt_tokens,
+                    completion_tokens = completion_tokens,
+                    max_prompt = max_prompt,
+                    tool_calls = tool_calls,
+                )
                 return AgentResult(
                     answer = answer,
                     steps = step,
@@ -165,7 +206,7 @@ Chỉ sử dụng kết quả tool sau khi đã nhận được.
                     "role": "user",
                     "content":(
                         'Error: action phải là "tool" hoặc "final"'
-                        "Hãy trả vè JSON đúng định dạng"
+                        "Hãy trả về JSON đúng định dạng"
                     ),
                 })
                 continue
@@ -185,6 +226,66 @@ Chỉ sử dụng kết quả tool sau khi đã nhận được.
                 tool_name,
                 arguments,
             )
+
+            tool_calls.append({
+                "step":step,
+                "tool_name": tool_name,
+                "arguments": arguments,
+                "result": tool_result,
+            })
+            if tool_name == "create_complaint":
+                try:
+                    if isinstance(tool_result,str):
+                        create_data = json.loads(tool_result)
+                    elif isinstance(tool_result, dict):
+                        create_data = tool_result
+                    else:
+                        create_data = {}
+
+                    complaint_id = create_data.get("complaint_id")
+
+                    if create_data.get("success") is True and complaint_id:
+                        verification_result = await self.mcp_client.call_tool(
+                            "get_complaint",
+                            {"complaint_id": str(complaint_id)},
+                        )
+
+                        # Phân tích kết quả xác minh.
+                        if isinstance(verification_result, str):
+                            verification_data = json.loads(verification_result)
+                        elif isinstance(verification_result, dict):
+                            verification_data = verification_result
+                        else:
+                            verification_data = {}
+
+                        verified = verification_data.get("found") is True
+
+                        logger.info(
+                            "Agent verify complaint_id=%s found=%s result=%s",
+                            complaint_id,
+                            verified,
+                            verification_result,
+                        )
+
+                        tool_result = (
+                            f"Kết quả tạo khiếu nại: {tool_result}\n"
+                            f"Kết quả xác minh: {verification_result}\n"
+                            f"Xác minh thành công: {verified}"
+                        )
+                    else:
+                        tool_result = (
+                            f"Kết quả tạo khiếu nại: {tool_result}\n"
+                            "Không thể xác minh vì kết quả tạo không có "
+                            "success=true và complaint_id hợp lệ."
+                        )
+
+                except (json.JSONDecodeError, TypeError, ValueError) as error:
+                    logger.exception("Không phân tích được kết quả khiếu nại")
+                    tool_result = (
+                        f"Kết quả tạo/xác minh khiếu nại gặp lỗi: {error}\n"
+                        f"Kết quả ban đầu: {tool_result}"
+                    )
+
 
             logger.info(
                 "Agent step=%s tool=%s arguments=%s result=%s",
@@ -210,6 +311,15 @@ Chỉ sử dụng kết quả tool sau khi đã nhận được.
                     "hãy trả lời cuối cùng theo định dang JSON"
                 ),
             })
+
+        self._write_usage_log(
+            steps = self.max_steps,
+            calls = calls,
+            prompt_tokens = prompt_tokens,
+            completion_tokens = completion_tokens,
+            max_prompt = max_prompt,
+            tool_calls = tool_calls,
+        )
         return AgentResult(
             answer= (
                 f"Agent đã đạt giới hạn: {self.max_steps} bước "
@@ -218,12 +328,3 @@ Chỉ sử dụng kết quả tool sau khi đã nhận được.
             steps = self.max_steps,
             success=False
         )
-
-        
-
-
-
-
-
-
-
