@@ -20,20 +20,27 @@ class MCPClient:
             args=[str(self.server_script)],
             cwd = str(self.server_script.parent),
         )
-        self._context = Client (server)
-        self.client = await self._context._aenter()
-        try: 
-            response = await self.client.list_tools()
+        context = Client(server)
+        try:
+            client = await context.__aenter__()
+            self._context = context
+            self.client = client
+
+            response = await client.list_tools()
             self.tools = response.tools
+
         except Exception:
-            await self.close()
+            if self._context is not None:
+                await self.close()
+            else:
+                await context.__aexit__(None, None, None)
             raise
-    def get_tool_schema(self) ->list[dict[str,Any]]:
+    def get_tool_schemas(self) ->list[dict[str,Any]]:
         schemas = []
         for tool in self.tools:
             schemas.append({
                 "name":tool.name,
-                "desciption": tool.description or "",
+                "description": tool.description or "",
                 "input_schema": tool.input_schema,
             })
         return schemas
@@ -46,7 +53,7 @@ class MCPClient:
         if name not in available_tools:
             return f"Error: Không tìm thấy tool {name}"
         if not isinstance (arguments, dict):
-            return f"Error: Arguments phải là dictionary"
+            return "Error: Arguments phải là dictionary"
         
         try: 
             result = await self.client.call_tool(name,arguments)
@@ -56,7 +63,7 @@ class MCPClient:
                     for item in (result.content or [])
                 ]
                 return "Error: " + ("\n".join(messages) or "MCP tool thực thi thất bại")
-            mesages= [
+            messages= [
                 getattr(item,"text",str(item))
                 for item in (result.content or [])
             ]
@@ -64,10 +71,12 @@ class MCPClient:
         except Exception as error:
             return f"Error: Gọi tool '{name}' thất bại: {error}" 
 
+    
     async def close(self) -> None:
-        if self._context is not None:
-            context = self._context
-            self.client=None
-            self._context = None
-            self.tools = []
-            await context.__aexit__(None,None,None)
+        context = self._context
+        self.client = None
+        self._context = None
+        self.tools = []
+
+        if context is not None:
+            await context.__aexit__(None, None, None)
