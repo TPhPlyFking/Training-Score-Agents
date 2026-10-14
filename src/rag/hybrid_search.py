@@ -1,5 +1,9 @@
 from rank_bm25 import BM25Okapi
 import numpy as np
+from sentence_transformers import SentenceTransformer
+print("Đang tải AI Vector Embedding...")
+embedding_model = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
+
 from doc_model import DocumentChunk
 from doc_store import DocumentStore
 from document_parser import parse_htrl_document
@@ -18,9 +22,8 @@ def build_bm25_index(chunks: list[DocumentChunk]) -> BM25Okapi:
     return BM25Okapi(tokenized)
 
 
-def embed_text_dummy(text: str) -> list[float]:
-    return np.random.rand(1536).tolist()
-
+def embed_text_real(text: str) -> list[float]:
+    return embedding_model.encode(text).tolist()
 def cosine_similarity_dummy(v1: list[float], v2: list[float]) -> float:
     v1, v2 = np.array(v1), np.array(v2)
     return np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
@@ -39,7 +42,7 @@ def hybrid_search(
     bm25_scores = bm25_index.get_scores(tokenized_query)
     bm25_normalized = normalize_scores(bm25_scores)
     
-    query_embedding = embed_text_dummy(query) 
+    query_embedding = embed_text_real(query) 
     vector_scores = []
     for embedding in embeddings:
         score = cosine_similarity_dummy(query_embedding, embedding) 
@@ -73,7 +76,7 @@ if __name__ == "__main__":
     my_chunks = parse_htrl_document(file_path, "DOC0007", "Quy định đánh giá rèn luyện")
     
     for c in my_chunks:
-        c.embedding = embed_text_dummy(c.content) 
+        c.embedding = embed_text_real(c.content) 
         store.add_chunk(c)
 
     chunks = list(store.chunks.values())
