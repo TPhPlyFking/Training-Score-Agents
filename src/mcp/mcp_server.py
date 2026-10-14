@@ -5,12 +5,10 @@ from mcp.server import Server
 from mcp.server.stdio import stdio_server
 import mcp.types as types
 
-# Khởi tạo MCP Server chuẩn v2.x
-app = Server("training-score-mcp-server")
+# Import các hàm từ file db.py trong thư mục utils
+from utils.db import save, get
 
-FAKE_DATABASE = {
-    "complaints": {}
-}
+app = Server("training-score-mcp-server")
 
 @app.list_tools()
 async def list_tools() -> list[types.Tool]:
@@ -55,7 +53,7 @@ async def list_tools() -> list[types.Tool]:
         ),
         types.Tool(
             name="create_complaint",
-            description="Tạo yêu cầu khiếu nại điểm rèn luyện mới (Side Effect - Ghi dữ liệu).",
+            description="Tạo yêu cầu khiếu nại điểm rèn luyện mới (Side Effect - Ghi dữ liệu vào JSONL).",
             inputSchema={
                 "type": "object",
                 "properties": {
@@ -67,7 +65,7 @@ async def list_tools() -> list[types.Tool]:
         ),
         types.Tool(
             name="get_complaint",
-            description="Đọc thông tin khiếu nại theo ID để xác minh trạng thái (Bước Verify).",
+            description="Đọc thông tin khiếu nại theo ID để xác minh trạng thái từ file JSONL (Bước Verify).",
             inputSchema={
                 "type": "object",
                 "properties": {
@@ -133,17 +131,27 @@ async def call_tool(name: str, arguments: dict) -> list[types.TextContent]:
             student_id = arguments.get("student_id")
             reason = arguments.get("reason")
             complaint_id = f"CMP-{int(time.time())}"
-            FAKE_DATABASE["complaints"][complaint_id] = {"student_id": student_id, "reason": reason, "status": "Pending"}
-            response_data = {"success": True, "complaint_id": complaint_id, "message": "Đã tạo đơn khiếu nại thành công."}
+            complaint_data = {
+                "student_id": student_id,
+                "reason": reason,
+                "status": "Pending",
+                "created_at": time.strftime("%Y-%m-%d %H:%M:%S")
+            }
+            # Gọi hàm save từ db.py để ghi bền vững vào file JSONL
+            save(complaint_id, complaint_data)
+            
+            response_data = {"success": True, "complaint_id": complaint_id, "message": "Đã tạo và lưu đơn khiếu nại thành công vào tệp JSONL."}
             return [types.TextContent(type="text", text=json.dumps(response_data, ensure_ascii=False))]
 
         elif name == "get_complaint":
             complaint_id = arguments.get("complaint_id")
-            complaint_info = FAKE_DATABASE["complaints"].get(complaint_id)
+            # Gọi hàm get từ db.py để đọc dữ liệu từ file JSONL
+            complaint_info = get(complaint_id)
+            
             if complaint_info:
                 response_data = {"complaint_id": complaint_id, "found": True, **complaint_info}
             else:
-                response_data = {"complaint_id": complaint_id, "found": False, "message": "Không tìm thấy khiếu nại."}
+                response_data = {"complaint_id": complaint_id, "found": False, "message": "Không tìm thấy khiếu nại trong cơ sở dữ liệu."}
             return [types.TextContent(type="text", text=json.dumps(response_data, ensure_ascii=False))]
 
         else:
