@@ -1,6 +1,7 @@
 from rank_bm25 import BM25Okapi
 import numpy as np
 from sentence_transformers import SentenceTransformer
+from pathlib import Path
 print("Đang tải AI Vector Embedding...")
 embedding_model = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
 
@@ -72,7 +73,8 @@ def hybrid_search(
 
 if __name__ == "__main__":
     store = DocumentStore()
-    file_path = "../../data/HTRL.md"
+    path = Path(__file__).resolve().parents[2]
+    file_path = path/"data"/"HTRL.md"
     my_chunks = parse_htrl_document(file_path, "DOC0007", "Quy định đánh giá rèn luyện")
     
     for c in my_chunks:
