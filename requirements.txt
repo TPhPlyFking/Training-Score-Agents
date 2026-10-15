@@ -1,2 +1,3 @@
 groq
 mcp==2.2.0
+python-dotenv
