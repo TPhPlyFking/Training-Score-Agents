@@ -1,7 +1,7 @@
 import re
 import os
-from doc_model import Document, DocumentChunk
-from doc_store import DocumentStore
+from src.rag.doc_model import Document, DocumentChunk
+from src.rag.doc_store import DocumentStore
 
 def parse_htrl_document (filepath: str, doc_id: str, title: str) -> list[DocumentChunk]:
     """Read file HTRL.md and cut by chunk"""

@@ -4,9 +4,9 @@ from sentence_transformers import SentenceTransformer
 print("Đang tải AI Vector Embedding...")
 embedding_model = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
 
-from doc_model import DocumentChunk
-from doc_store import DocumentStore
-from document_parser import parse_htrl_document
+from src.rag.doc_model import DocumentChunk
+from src.rag.doc_store import DocumentStore
+from src.rag.document_parser import parse_htrl_document
 
 def normalize_scores(scores: list[float]) -> list[float]:
     if len(scores) == 0:

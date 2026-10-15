@@ -1,4 +1,4 @@
-from doc_model import Document, DocumentChunk
+from src.rag.doc_model import Document, DocumentChunk
 from dataclasses import dataclass, field
 from typing import List, Optional
 

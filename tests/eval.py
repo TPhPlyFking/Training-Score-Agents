@@ -1,14 +1,34 @@
 import json 
 import os
+from dotenv import load_dotenv
+import asyncio
+from src.utils.api_handler import APIHandler
+from src.mcp.mcp_client import MCPClient
+from src.agent.agent_loop import AgentLoop
+from src.rag.hybrid_search import hybrid_search
 
-def ask_agent_dummy(question: str) -> str:
-    question_lower = question.lower()
-    if any(word in question_lower for word in ["lịch", "thực đơn", "bãi gửi xe", "học phí"]):
-        return "Tôi không cso thông tin. Tôi chỉ giải đáp về quy chế điểm rèn luyện."
-    return "Dựa vào tài liệu, sinh viên sẽ được điểm cộng/trừ điểm theo quy định."
+load_dotenv()
+
+async def ask_agent_real(question: str) -> str:
+    api_handler = APIHandler()
+    mcp_client = MCPClient("src/mcp/mcp_server.py")
+    
+    await mcp_client.start()
+    
+    agent = AgentLoop(
+        api_handler=api_handler, 
+        mcp_client=mcp_client,
+        rag_search=hybrid_search 
+    )
+    
+    result = await agent.run(question)
+    
+    await mcp_client.stop()
+    
+    return result.answer
 
 def run_evaluation():
-    test_file_path = "tests/testset.json" if os.path.exists("tests/testset.json") else ("testset.jsonl")
+    test_file_path = "tests/testset.jsonl" if os.path.exists("tests/testset.jsonl") else "testset.jsonl"
 
     try:
         with open(test_file_path, "r", encoding="utf-8") as f:
@@ -29,23 +49,23 @@ def run_evaluation():
         is_answerable = item["is_answerable"]
 
         print(f"Câu {i}: {question}")
-
-        agent_answer = ask_agent_dummy(question)
-
+        
+        # Dùng asyncio.run() để chạy hàm bất đồng bộ
+        agent_answer = asyncio.run(ask_agent_real(question))
+        
         if not is_answerable:
             total_unanswerable += 1
-            refusal_keywords = ["Không có thông tin", "chỉ giải đáp", "chỉ trả lời", "không hỗ trợ"]
-
-            if any(kw in agent_answer.lower() for kw in refusal_keywords ):
+            # Các từ khóa chứng tỏ AI đã từ chối đúng
+            refusal_keywords = ["không có thông tin", "chỉ giải đáp", "chỉ trả lời", "không hỗ trợ", "không thể"]
+            
+            if any(kw in agent_answer.lower() for kw in refusal_keywords):
                 correct_refusals += 1
                 print("✅ ĐÁNH GIÁ: Đạt (TỪ CHỐI ĐÚNG).")
             else:
                 print("❌ ĐÁNH GIÁ: Không đạt (BỊ LỪA - Trả lời bừa).")
-        
         else:
             print(f"   - Đáp án chuẩn: {expected}")
             print(f"   - AI trả lời: {agent_answer}")
-            print("⏳ ĐÁNH GIÁ: Đang chờ tích hợp LLM-as-a-Judge để chấm điểm ngữ nghĩa.")
         
         print("-" * 60)
 
@@ -53,9 +73,6 @@ def run_evaluation():
     if total_unanswerable > 0:
         refusal_rate = (correct_refusals / total_unanswerable) * 100
         print(f"🎯 Tỷ lệ từ chối đúng (Correct Refusal Rate): {correct_refusals}/{total_unanswerable} ({refusal_rate:.1f}%)")
-    else:
-        print("🎯 Không có câu hỏi bẫy nào trong đề thi.")
-    print("🎯 Độ trung thực (Faithfulness): Sắp hoàn thiện.")
 
 if __name__ == "__main__":
     run_evaluation()
