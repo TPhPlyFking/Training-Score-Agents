@@ -2,30 +2,55 @@ import json
 import os
 from dotenv import load_dotenv
 import asyncio
+from pathlib import Path
+
 from src.utils.api_handler import APIHandler
 from src.mcp.mcp_client import MCPClient
-from src.agent.agent_loop import AgentLoop
-from src.rag.hybrid_search import hybrid_search
-
+from src.agent.agent__loop import AgentLoop
+from src.rag.hybrid_search import (hybrid_search,build_bm25_index,embed_text_real)
+from src.rag.doc_store import DocumentStore
+from src.rag.document_parser import parse_htrl_document
 load_dotenv()
 
-async def ask_agent_real(question: str) -> str:
+path = Path(__file__).resolve().parents[1]
+async def ask_agent_real(question: str, chunks, bm25_index, embeddings) -> str:
     api_handler = APIHandler()
-    mcp_client = MCPClient("src/mcp/mcp_server.py")
+    server_path = path / "src" / "mcp" / "mcp_server.py"
+    mcp_client = MCPClient(server_path)
     
-    await mcp_client.start()
-    
-    agent = AgentLoop(
-        api_handler=api_handler, 
-        mcp_client=mcp_client,
-        rag_search=hybrid_search 
-    )
-    
-    result = await agent.run(question)
-    
-    await mcp_client.stop()
-    
-    return result.answer
+    async def search_rag(query: str):
+        results = hybrid_search(
+            query=query,
+            chunks=chunks,
+            bm25_index=bm25_index,
+            embeddings=embeddings,
+            top_k=3,
+        )
+        return [
+            {
+                "doc_id": chunk.doc_id,
+                "title": chunk.metadata.get(
+                    "title", "Quy định đánh giá rèn luyện"
+                ),
+                "content": chunk.content,
+            }
+            for chunk, hybrid, bm25, vector in results
+        ]
+
+    try:
+        await mcp_client.connect()
+
+        agent = AgentLoop(
+            api_handler=api_handler,
+            mcp_client=mcp_client,
+            rag_search=search_rag,
+        )
+
+        result = await agent.run(question)
+        return result.answer
+
+    finally:
+        await mcp_client.close()
 
 def run_evaluation():
     test_file_path = "tests/testset.jsonl" if os.path.exists("tests/testset.jsonl") else "testset.jsonl"
@@ -36,7 +61,16 @@ def run_evaluation():
     except FileNotFoundError:
         print(f"Lỗi không tìm thấy files {test_file_path}. Hãy kiêm tra lại đường dẫn")
         return
-
+    document_path = path / "data" / "HTRL.md"
+    store = DocumentStore()
+    chunks = parse_htrl_document(document_path, "DC0007", "Quy định đánh giá rèn luyện")
+    
+    for chunk in chunks:
+        chunk.embedding = embed_text_real(chunk.content)
+        store.add_chunk(chunk)
+    chunks = list(store.chunks.values())
+    bm25_index = build_bm25_index(chunks)
+    embeddings = [chunk.embedding for chunk in chunks]
     total_questions = len(test_data)
     total_unanswerable = 0
     correct_refusals = 0
@@ -51,7 +85,7 @@ def run_evaluation():
         print(f"Câu {i}: {question}")
         
         # Dùng asyncio.run() để chạy hàm bất đồng bộ
-        agent_answer = asyncio.run(ask_agent_real(question))
+        agent_answer = asyncio.run(ask_agent_real(question, chunks, bm25_index, embeddings))
         
         if not is_answerable:
             total_unanswerable += 1
