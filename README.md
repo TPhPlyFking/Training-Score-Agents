@@ -1,4 +1,4 @@
-# Trợ lý điểm rèn luyện và khiếu nại (AIPR Final Project – Đề T4)
+# Trợ lý điểm rèn luyện và khiếu nại 
 
 Agent trả lời câu hỏi về Quy định đánh giá kết quả rèn luyện của HCMUTE (có trích dẫn doc_id),
 tính điểm rèn luyện, và tạo khiếu nại rồi tự kiểm tra lại khiếu nại đã được lưu.
