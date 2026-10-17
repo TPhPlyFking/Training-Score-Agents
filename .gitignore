@@ -1,0 +1,6 @@
+# Không đưa key và file nặng lên GitHub
+.env
+.venv/
+__pycache__/
+*.pyc
+data/cache/
