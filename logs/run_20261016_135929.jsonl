@@ -1,0 +1,2 @@
+{"timestamp": "2026-10-16T13:59:54.740988+00:00", "question": "Sinh viên nhờ người khác thi hộ thì bị xử lý điểm rèn luyện như thế nào?", "steps": 1, "tool_calls": [], "USAGE": {"calls": 1, "prompt_tokens": 1418, "completion_tokens": 46, "max_prompt": 1418}}
+{"timestamp": "2026-10-16T14:00:16.134023+00:00", "question": "Hôm nay có lịch đến trường cho môn AIPR không?", "steps": 1, "tool_calls": [], "USAGE": {"calls": 1, "prompt_tokens": 1398, "completion_tokens": 46, "max_prompt": 1398}}

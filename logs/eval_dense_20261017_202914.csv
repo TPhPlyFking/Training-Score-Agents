@@ -1,0 +1,32 @@
+﻿cau,question,is_answerable,status,faithfulness,answer
+1,Sinh viên nhờ người khác thi hộ thì bị xử lý điểm rèn luyện như thế nào?,False,CORRECT_REFUSAL,,Tài liệu quy định không có thông tin về vấn đề này. Tôi chỉ giải đáp về Quy định đánh giá kết quả rèn luyện.
+2,Hôm nay có lịch đến trường cho môn AIPR không?,False,CORRECT_REFUSAL,,Tài liệu quy định không có thông tin về vấn đề này. Tôi chỉ giải đáp về Quy định đánh giá kết quả rèn luyện.
+3,"Có bài tham luận, báo cáo chuyên đề tại hội thảo khoa học cấp trường được bao nhiêu điểm rèn luyện?",True,FALSE_REFUSAL,,Tài liệu quy định không có thông tin về vấn đề này. Tôi chỉ giải đáp về Quy định đánh giá kết quả rèn luyện.
+4,Sinh viên bị kỷ luật mức khiển trách thì điểm rèn luyện cao nhất đạt được là loại gì?,True,ANSWERED,1.0,"Sinh viên bị kỷ luật mức khiển trách thì kết quả đánh giá rèn luyện không được vượt quá loại khá.
+
+Nguồn: (doc_id: DOC0007, Điều 11)"
+5,Thủ tục đăng ký làm lại thẻ sinh viên bị mất như thế nào?,False,CORRECT_REFUSAL,,Tài liệu quy định không có thông tin về vấn đề này. Tôi chỉ giải đáp về Quy định đánh giá kết quả rèn luyện.
+6,Việc đánh giá kết quả rèn luyện của sinh viên được tiến hành vào khoảng thời gian nào?,True,ANSWERED,1.0,"Việc đánh giá kết quả rèn luyện học kỳ của sinh viên được tiến hành sau khi kết thúc học kỳ. (doc_id: DOC0007, Điều 12)"
+7,Kết quả rèn luyện của sinh viên được phân thành những loại nào?,True,ANSWERED,0.0,"Kết quả rèn luyện của sinh viên được phân thành 6 loại: xuất sắc, tốt, khá, trung bình, yếu và kém. Cụ thể như sau:
+- Loại xuất sắc: Từ 90 điểm đến 100 điểm;
+- Loại tốt: Từ 80 điểm đến dưới 90 điểm;
+- Loại khá: Từ 65 điểm đến dưới 80 điểm;
+- Loại trung bình: Từ 50 điểm đến dưới 65 điểm;
+- Loại yếu: Từ 35 điểm đến dưới 50 điểm;
+- Loại kém: Dưới 35 điểm.
+
+(Nguồn: doc_id: DOC0007, Điều 10)"
+8,Sinh viên đồng thời học hai chương trình đào tạo sẽ được đánh giá kết quả rèn luyện ra sao?,True,ANSWERED,1.0,"Sinh viên đồng thời học hai chương trình đào tạo sẽ được đánh giá kết quả rèn luyện ở chương trình thứ nhất và lấy kết quả dùng chung cho chương trình thứ hai. Trường hợp chương trình thứ nhất đã hoàn thành thì sẽ tiếp tục được đánh giá kết quả rèn luyện đối với chương trình thứ hai.
+
+(Nguồn: doc_id: DOC0007, Điều 11)"
+9,Trường có bao nhiêu bãi gửi xe máy dành cho sinh viên?,False,CORRECT_REFUSAL,,Tài liệu quy định không có thông tin về vấn đề này. Tôi chỉ giải đáp về Quy định đánh giá kết quả rèn luyện.
+10,Em tham gia chiến dịch mùa hè xanh thì được cộng tối đa bao nhiêu điểm?,True,FALSE_REFUSAL,,Tài liệu quy định không có thông tin về vấn đề này. Tôi chỉ giải đáp về Quy định đánh giá kết quả rèn luyện.
+11,Sinh viên không tham gia sinh hoạt lớp bị trừ mấy điểm?,True,ANSWERED,1.0,"Sinh viên không tham gia sinh hoạt lớp bị trừ 2 điểm/lần (doc_id: DOC0007, Nội dung IV.2)."
+12,Học phí học lại môn Cơ sở dữ liệu kỳ này là bao nhiêu một tín chỉ?,False,CORRECT_REFUSAL,,Tài liệu quy định không có thông tin về vấn đề này. Tôi chỉ giải đáp về Quy định đánh giá kết quả rèn luyện.
+13,"Học kỳ 1 em được 82 điểm rèn luyện, học kỳ 2 được 70 điểm. Điểm rèn luyện năm học của em là bao nhiêu và xếp loại gì?",True,FALSE_REFUSAL,,Tài liệu quy định không có thông tin về vấn đề này. Tôi chỉ giải đáp về Quy định đánh giá kết quả rèn luyện.
+14,"Kỳ này điểm trung bình chung của em là 8.2, em tham dự 2 buổi hội thảo về học tập cấp khoa và nghỉ học không phép 1 lần. Điểm nội dung Học tập của em là bao nhiêu?",True,FALSE_REFUSAL,,Tài liệu quy định không có thông tin về vấn đề này. Tôi chỉ giải đáp về Quy định đánh giá kết quả rèn luyện.
+15,Học kỳ 1 em được 85 điểm rèn luyện. Vậy điểm rèn luyện năm học của em xếp loại gì?,False,CORRECT_REFUSAL,,"Tài liệu quy định không có thông tin về vấn đề này. Tôi chỉ giải đáp về Quy định đánh giá kết quả rèn luyện.
+
+Giải thích: Theo Điều 14, điểm rèn luyện năm học là trung bình cộng của điểm rèn luyện của hai (02) học kỳ trong năm học. Bạn mới chỉ cung cấp điểm của học kỳ 1 (85 điểm), chưa đủ dữ liệu để xác định điểm rèn luyện năm học và xếp loại tương ứng.
+
+Để tôi có thể hỗ trợ, bạn vui lòng cung cấp thêm điểm rèn luyện của học kỳ 2."

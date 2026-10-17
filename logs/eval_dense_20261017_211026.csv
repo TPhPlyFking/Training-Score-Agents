@@ -1,0 +1,43 @@
+﻿cau,question,is_answerable,status,faithfulness,answer
+1,Sinh viên nhờ người khác thi hộ thì bị xử lý điểm rèn luyện như thế nào?,False,CORRECT_REFUSAL,,Tài liệu quy định không có thông tin về vấn đề này. Tôi chỉ giải đáp về Quy định đánh giá kết quả rèn luyện.
+2,Hôm nay có lịch đến trường cho môn AIPR không?,False,CORRECT_REFUSAL,,Tài liệu quy định không có thông tin về vấn đề này. Tôi chỉ giải đáp về Quy định đánh giá kết quả rèn luyện.
+3,"Có bài tham luận, báo cáo chuyên đề tại hội thảo khoa học cấp trường được bao nhiêu điểm rèn luyện?",True,FALSE_REFUSAL,,Tài liệu quy định không có thông tin về vấn đề này. Tôi chỉ giải đáp về Quy định đánh giá kết quả rèn luyện.
+4,Sinh viên bị kỷ luật mức khiển trách thì điểm rèn luyện cao nhất đạt được là loại gì?,True,ANSWERED,1.0,"Sinh viên bị kỷ luật mức khiển trách thì kết quả đánh giá rèn luyện không được vượt quá loại khá. (doc_id: DOC0007, Điều 11)"
+5,Thủ tục đăng ký làm lại thẻ sinh viên bị mất như thế nào?,False,CORRECT_REFUSAL,,Tài liệu quy định không có thông tin về vấn đề này. Tôi chỉ giải đáp về Quy định đánh giá kết quả rèn luyện.
+6,Việc đánh giá kết quả rèn luyện của sinh viên được tiến hành vào khoảng thời gian nào?,True,ANSWERED,1.0,"Việc đánh giá kết quả rèn luyện của sinh viên được tiến hành sau khi kết thúc học kỳ. Cụ thể, sinh viên có trách nhiệm kiểm tra và có quyền đề nghị bổ sung hoặc sửa đổi các nội dung còn thiếu hoặc sai lệch so với điểm kết quả được công bố trên phần mềm chuyên biệt liên quan đến việc đánh giá và cho điểm rèn luyện đối với mỗi hoạt động tham gia trong thời gian hai (02) tuần kể từ ngày điểm được công bố.
+
+Nguồn: (doc_id: DOC0007, Điều 12)"
+7,Kết quả rèn luyện của sinh viên được phân thành những loại nào?,True,ANSWERED,0.0,"Kết quả rèn luyện của sinh viên được phân thành 6 loại dựa trên thang điểm như sau:
+
+- **Xuất sắc**: Từ 90 đến 100 điểm.
+- **Tốt**: Từ 80 đến dưới 90 điểm.
+- **Khá**: Từ 65 đến dưới 80 điểm.
+- **Trung bình**: Từ 50 đến dưới 65 điểm.
+- **Yếu**: Từ 35 đến dưới 50 điểm.
+- **Kém**: Dưới 35 điểm.
+
+(Nguồn: doc_id: DOC0007, Điều 10)"
+8,Sinh viên đồng thời học hai chương trình đào tạo sẽ được đánh giá kết quả rèn luyện ra sao?,True,ANSWERED,1.0,"Theo tài liệu quy định, sinh viên đồng thời học hai chương trình đào tạo sẽ được đánh giá kết quả rèn luyện ở chương trình thứ nhất và lấy kết quả dùng chung cho chương trình thứ hai. Trường hợp chương trình thứ nhất đã hoàn thành thì sẽ tiếp tục được đánh giá kết quả rèn luyện đối với chương trình thứ hai. (doc_id: DOC0007, Điều 11)"
+9,Trường có bao nhiêu bãi gửi xe máy dành cho sinh viên?,False,CORRECT_REFUSAL,,Tài liệu quy định không có thông tin về vấn đề này. Tôi chỉ giải đáp về Quy định đánh giá kết quả rèn luyện.
+10,Em tham gia chiến dịch mùa hè xanh thì được cộng tối đa bao nhiêu điểm?,True,FALSE_REFUSAL,,Tài liệu quy định không có thông tin về vấn đề này. Tôi chỉ giải đáp về Quy định đánh giá kết quả rèn luyện.
+11,Sinh viên không tham gia sinh hoạt lớp bị trừ mấy điểm?,True,ANSWERED,1.0,"Sinh viên không tham gia sinh hoạt lớp bị trừ 2 điểm mỗi lần.
+
+Nguồn: (doc_id: DOC0007, Nội dung IV. 2)"
+12,Học phí học lại môn Cơ sở dữ liệu kỳ này là bao nhiêu một tín chỉ?,False,CORRECT_REFUSAL,,Tài liệu quy định không có thông tin về vấn đề này. Tôi chỉ giải đáp về Quy định đánh giá kết quả rèn luyện.
+13,"Học kỳ 1 em được 82 điểm rèn luyện, học kỳ 2 được 70 điểm. Điểm rèn luyện năm học của em là bao nhiêu và xếp loại gì?",True,ANSWERED,1.0,"Điểm rèn luyện năm học của bạn là 76 điểm, xếp loại khá.
+
+**Giải thích:**
+- Theo quy định, điểm rèn luyện năm học là trung bình cộng của điểm rèn luyện hai học kỳ (doc_id: DOC0007, Điều 14).
+- Công thức: (82 + 70) / 2 = 76 điểm.
+- Theo thang phân loại, mức điểm từ 65 đến dưới 80 điểm được xếp loại khá (doc_id: DOC0007, Điều 10)."
+14,"Kỳ này điểm trung bình chung của em là 8.2, em tham dự 2 buổi hội thảo về học tập cấp khoa và nghỉ học không phép 1 lần. Điểm nội dung Học tập của em là bao nhiêu?",True,ANSWERED,1.0,"Tài liệu quy định không có đủ thông tin để tính điểm nội dung Học tập cho trường hợp của bạn.
+
+1. Về điểm trung bình học tập 8.2: Tài liệu RAG chỉ nêu nội dung Học tập có khung điểm từ 0 - 20 điểm (tối đa 30 điểm), nhưng không cung cấp bảng quy đổi cụ thể từ điểm trung bình (GPA) sang điểm rèn luyện nội dung Học tập (ví dụ: điểm 8.2 được bao nhiêu điểm trong số 20 điểm đó).
+2. Về việc tham dự 2 buổi hội thảo: Tài liệu ghi nhận hình thức ""Tham dự... hội thảo... từ cấp Trường trở lên (tổ chức tại trường)"" được cộng 3 điểm/buổi (điểm I.7.17). Tuy nhiên, bạn cung cấp là hội thảo ""cấp khoa"", không hẳn là ""cấp Trường trở lên"". Do đó, cần xác nhận lại cấp độ hội thảo mới tính điểm cộng chính xác.
+
+Vì thiếu công thức quy đổi điểm trung bình và độ chính xác về cấp độ hội thảo, tôi không thể tính điểm nội dung Học tập cho bạn. Bạn vui lòng cung cấp thêm bảng quy đổi điểm trung bình sang điểm rèn luyện của nhà trường hoặc liên hệ bộ phận phụ trách đề nghị điểm rèn luyện."
+15,Học kỳ 1 em được 85 điểm rèn luyện. Vậy điểm rèn luyện năm học của em xếp loại gì?,False,CORRECT_REFUSAL,,"Không đủ dữ liệu để xác định điểm rèn luyện năm học.
+
+Theo quy định, điểm rèn luyện năm học là trung bình cộng của điểm rèn luyện hai (02) học kỳ trong năm học. (doc_id: DOC0007, Điều 14)
+
+Hiện tại, bạn mới chỉ cung cấp điểm rèn luyện của học kỳ 1 (85 điểm). Để tính được điểm rèn luyện năm học và xếp loại tương ứng, tôi cần biết thêm **điểm rèn luyện của học kỳ 2**. Bạn vui lòng cung cấp điểm này để tôi hỗ trợ tiếp."
