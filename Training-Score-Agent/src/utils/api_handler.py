@@ -1,5 +1,6 @@
-import logging 
+import logging
 import os
+import re
 import time
 from typing import Any
 from groq import Groq
@@ -37,7 +38,8 @@ class APIHandler:
             try:
                 response = self.client.chat.completions.create(
                     model = self.model,
-                    messages = messages,                    
+                    messages = messages,  
+                    max_tokens = 700                 
                 )
                 content = response.choices[0].message.content
 
@@ -57,10 +59,17 @@ class APIHandler:
                     self.max_retries+1,
                     error,
                 )
+                # [SỬA] lỗi 413 = prompt quá dài, gửi lại y nguyên cũng lỗi -> dừng luôn, không thử lại
+                if getattr(error, "status_code", None) == 413:
+                    raise RuntimeError("Prompt quá dài (lỗi 413), cần giảm số chunk hoặc độ dài chunk")
                 if attempt == self.max_retries:
                     raise RuntimeError(
                         f"Không thể gọi Groq API sau "
                         f"{self.max_retries +1} lần thử"
                     )
-                time.sleep(2 ** attempt)
+                wait = 2 ** attempt
+                match = re.search(r"try again in\s*([\d.]+)(ms|s)", str(error))
+                if match:
+                    wait = float(match.group(1)) / (1000 if match.group(2) == "ms" else 1) + 1
+                time.sleep(wait)
         raise RuntimeError("Không nhận diện được phản hồi từ Groq API")
