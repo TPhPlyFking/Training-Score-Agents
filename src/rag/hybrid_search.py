@@ -1,14 +1,16 @@
 from rank_bm25 import BM25Okapi
 import numpy as np
 from sentence_transformers import SentenceTransformer
-print("Đang tải AI Vector Embedding...")
+from pathlib import Path
+import sys
+print("Đang tải AI Vector Embedding...", file=sys.stderr)
 embedding_model = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
 
-from doc_model import DocumentChunk
-from doc_store import DocumentStore
-from document_parser import parse_htrl_document
+from src.rag.doc_model import DocumentChunk
+from src.rag.doc_store import DocumentStore
+from src.rag.document_parser import parse_htrl_document
 
-def normalize_scores(scores: list[float]) -> list[float]:
+def normalise_scores(scores: list[float]) -> list[float]:
     if len(scores) == 0:
         return []
     min_s = min(scores)
@@ -22,11 +24,18 @@ def build_bm25_index(chunks: list[DocumentChunk]) -> BM25Okapi:
     return BM25Okapi(tokenized)
 
 
-def embed_text_real(text: str) -> list[float]:
+def embed_text(text: str) -> list[float]:
     return embedding_model.encode(text).tolist()
-def cosine_similarity_dummy(v1: list[float], v2: list[float]) -> float:
-    v1, v2 = np.array(v1), np.array(v2)
-    return np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
+
+def cosine_similarity_calc(vec_a, vec_b):
+    """Tính toán Cosine Similarity giữa 2 vector."""
+    vec_a = np.array(vec_a)
+    vec_b = np.array(vec_b)
+    norm_a = np.linalg.norm(vec_a)
+    norm_b = np.linalg.norm(vec_b)
+    if norm_a == 0 or norm_b == 0:
+        return 0.0
+    return float(np.dot(vec_a, vec_b) / (norm_a * norm_b))
 
 def hybrid_search(
     query: str,
@@ -35,23 +44,27 @@ def hybrid_search(
     embeddings: list[list[float]],
     top_k: int = 3,
     w_bm25: float = 0.3,
-    w_vector: float = 0.7
+    w_vector: float = 0.7,
+    mode: str = "hybrid"      
 ) -> list[tuple]:
     
     tokenized_query = query.lower().split()
     bm25_scores = bm25_index.get_scores(tokenized_query)
-    bm25_normalized = normalize_scores(bm25_scores)
+    bm25_normalized = normalise_scores(bm25_scores)
     
-    query_embedding = embed_text_real(query) 
+    query_embedding = embed_text(query) 
     vector_scores = []
     for embedding in embeddings:
-        score = cosine_similarity_dummy(query_embedding, embedding) 
+        score = cosine_similarity_calc(query_embedding, embedding) 
         vector_scores.append(score)
-    vector_normalized = normalize_scores(vector_scores)
+    vector_normalized = normalise_scores(vector_scores)
     
     hybrid_score = []
     for i in range(len(chunks)):
-        score = (w_bm25 * bm25_normalized[i] + w_vector * vector_normalized[i])
+        if mode == "dense":
+            score = vector_scores[i]     
+        else:
+            score = (w_bm25 * bm25_normalized[i] + w_vector * vector_normalized[i])
         hybrid_score.append(score)
         
     rank = sorted(
@@ -72,11 +85,12 @@ def hybrid_search(
 
 if __name__ == "__main__":
     store = DocumentStore()
-    file_path = "../../data/HTRL.md"
+    path = Path(__file__).resolve().parents[2]
+    file_path = path/"data"/"HTRL.md"
     my_chunks = parse_htrl_document(file_path, "DOC0007", "Quy định đánh giá rèn luyện")
     
     for c in my_chunks:
-        c.embedding = embed_text_real(c.content) 
+        c.embedding = embed_text(c.content) 
         store.add_chunk(c)
 
     chunks = list(store.chunks.values())
@@ -91,8 +105,10 @@ if __name__ == "__main__":
 
     for query in test_queries:
         print(f"\n--- Câu hỏi: '{query}' ---")
-        results = hybrid_search(query, chunks, bm25_index, embeddings, top_k=2)
-        
-        for chunk, hybrid, bm25_score, vector_score in results:
-            print(f"⭐ Hybrid: {hybrid:.3f} | BM25: {bm25_score:.3f} | Vector: {vector_score:.3f}")
-            print(f"📄 Nguồn: {chunk.doc_id} - Nội dung: {chunk.content[:150]}...\n")
+        for mode in ["dense", "hybrid"]:          # chạy thử cả 2 chế độ để so sánh
+            print(f"[Chế độ {mode}]")
+            results = hybrid_search(query, chunks, bm25_index, embeddings, top_k=2, mode=mode)
+
+            for chunk, hybrid, bm25_score, vector_score in results:
+                print(f"⭐ Điểm: {hybrid:.3f} | BM25: {bm25_score:.3f} | Vector: {vector_score:.3f}")
+                print(f"📄 Nguồn: {chunk.doc_id} - Nội dung: {chunk.content[:150]}...\n")

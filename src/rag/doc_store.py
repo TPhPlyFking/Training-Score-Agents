@@ -1,4 +1,4 @@
-from doc_model import Document, DocumentChunk
+from src.rag.doc_model import Document, DocumentChunk
 from dataclasses import dataclass, field
 from typing import List, Optional
 
@@ -54,10 +54,10 @@ class DocumentStore:
 
         del self.documents[doc_id]
 
-        self.chunks = [
-            chunk for chunk in self.chunks
+        self.chunks = {
+            chunk_id: chunk for chunk_id, chunk in self.chunks.items()
             if chunk.doc_id != doc_id
-        ]
+        }   # chunks là dict, không phải list
 
         return True
         
@@ -83,7 +83,7 @@ class DocumentStore:
     def get_chunk(self, chunk_id: str) -> Optional[DocumentChunk]:  # retrieve a chunks by chunk_id
         """Lấy ra một chunk cụ thể dựa vào chunk_id."""
         # Duyệt qua mảng chunks để tìm ID tương ứng
-        for chunk in self.chunks:
+        for chunk in self.chunks.values():   # thêm .values() vì chunks là dict
             if chunk.chunk_id == chunk_id:
                 return chunk
         return None
@@ -92,7 +92,7 @@ class DocumentStore:
         """Lấy toàn bộ các chunks thuộc về một Document cụ thể."""
         # Dùng list comprehension để lọc nhanh các chunk có doc_id trùng khớp
         # (Lưu ý: Dựa theo hàm delete bên trên, mình giả định biến liên kết trong class DocumentChunk của bạn tên là doc_id, nếu ở bài trước bạn dùng dpc_id thì nhớ đổi lại nhé).
-        return [chunk for chunk in self.chunks if chunk.doc_id == doc_id]
+        return [chunk for chunk in self.chunks.values() if chunk.doc_id == doc_id]   # thêm .values()
         
     def Count(self) ->dict: # return count of Document and chunks
         """Trả về thống kê số lượng tài liệu và đoạn cắt hiện có."""
