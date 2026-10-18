@@ -96,7 +96,7 @@ python -m src.rag.hybrid_search
 |---|---|
 | `run.bat`, `Makefile` | Lệnh cài đặt và chạy (Windows / Linux, macOS) |
 | `demo.py` | Chạy demo: 2 câu mẫu hoặc 1 câu tùy ý |
-| `data/` | Quy định bản 2021 `HTRL.md` (DOC0007) và bản sửa đổi 2024 `HTRL_2024.md` (DOC0008, bản giả lập GV cung cấp để kiểm tra phân biệt phiên bản); khiếu nại được lưu ở `data/complaints.jsonl` |
+| `data/` | Quy định bản 2021 `HTRL.md` (DOC0007) và bản sửa đổi 2024 `HTRL_2024.md` (DOC0008, bản giả lập Sinh viên dùng để kiểm tra phân biệt phiên bản); khiếu nại được lưu ở `data/complaints.jsonl` |
 | `src/rag/` | Cắt chunk, lưu trữ, tìm kiếm dense và hybrid (BM25 + vector, lấy 5 đoạn) |
 | `src/mcp/` | MCP server (5 tool) và MCP client |
 | `src/agent/` | Vòng lặp agent, prompt (`prompts.txt`), schema tool |
@@ -109,6 +109,6 @@ python -m src.rag.hybrid_search
 
 | Thành viên | Phụ trách |
 |---|---|
-| TV1 – Trần Phát | Dữ liệu, chunking, hybrid search, testset, eval, README, run.bat, Makefile |
+| TV1 – Trần Phát | Dữ liệu, chunking, hybrid search, testset, eval |
 | TV2 – Quang Thành | MCP server, các tool, lưu trữ khiếu nại |
 | TV3 – Trí Dũng | Agent loop, MCP client, gọi API, prompt, log USAGE |
