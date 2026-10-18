@@ -9,16 +9,11 @@ import mcp.types as types
 
 import sys
 from pathlib import Path
-# server được chạy bằng "python mcp_server.py" từ thư mục src/mcp,
-# nên phải thêm thư mục gốc repo vào sys.path thì mới import được "src...."
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
-# dùng db.py để lưu khiếu nại ra file data/complaints.jsonl (bỏ FAKE_DATABASE trong RAM,
-# vì RAM mất hết khi server tắt, không chứng minh được side effect)
 from src.utils.db import save, get
 
-# dữ liệu cho search_regulations: chỉ tải 1 lần, ở lần gọi đầu tiên
 RAG_DATA = {}
 
 
@@ -36,7 +31,7 @@ def search_regulations_real(query: str) -> str:
     results = hybrid_search(query, RAG_DATA["chunks"], RAG_DATA["bm25"], RAG_DATA["embeddings"], top_k=5)
     lines = []
     for chunk, hybrid, bm25, vector in results:
-        lines.append(f"[doc_id: {chunk.doc_id}]\n{chunk.content}")
+        lines.append(f"[doc_id: {chunk.doc_id}] {chunk.metadata['title']}\n{chunk.content}")
     return "\n\n".join(lines)
 
 
@@ -140,21 +135,21 @@ async def call_tool(
             score_i = max(
                 0, min(c1.get("base", 0)
                        + c1.get("bonus", 0)
-                       - c1.get("penalty", 0), 30)
+                       - c1.get("penalty", 0), 38)
             )
             score_ii = max(
-                0, min(c2.get("base", 25)
-                       - c2.get("penalty", 0), 25)
+                0, min(c2.get("base", 20)
+                       - c2.get("penalty", 0), 20)
             )
             score_iii = max(
                 0, min(c3.get("base", 0)
                        + c3.get("bonus", 0)
-                       - c3.get("penalty", 0), 30)
+                       - c3.get("penalty", 0), 38)
             )
             score_iv = max(
                 0, min(c4.get("base", 0)
                        + c4.get("bonus", 0)
-                       - c4.get("penalty", 0), 38)
+                       - c4.get("penalty", 0), 30)
             )
             score_v = max(
                 0, min(c5.get("base", 0)
@@ -166,11 +161,11 @@ async def call_tool(
                 100,
             )
 
-            if total >= 90:
+            if total >= 92:
                 classification = "Xuất sắc"
-            elif total >= 80:
+            elif total >= 82:
                 classification = "Tốt"
-            elif total >= 65:
+            elif total >= 68:
                 classification = "Khá"
             elif total >= 50:
                 classification = "Trung bình"

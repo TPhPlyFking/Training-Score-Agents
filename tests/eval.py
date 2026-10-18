@@ -24,10 +24,10 @@ MODE = sys.argv[1] if len(sys.argv) > 1 else "hybrid"
 
 
 def judge_faithfulness(question: str, found_chunks, answer: str):
-    """LLM-as-a-judge: nhờ LLM đếm xem bao nhiêu ý trong câu trả lời có căn cứ trong tài liệu tìm được.
+    """Nhờ LLM đếm xem bao nhiêu ý trong câu trả lời có căn cứ trong tài liệu tìm được.
     faithfulness = số ý có căn cứ / tổng số ý  (1.0 = bám tài liệu hoàn toàn, 0 = bịa hoàn toàn)"""
     judge_prompt = (path / "tests" / "prompts" / "judge_faithfulness.txt").read_text(encoding="utf-8")
-    context = "\n\n".join(chunk.content for chunk in found_chunks)
+    context = "\n\n".join(f"[doc_id: {chunk.doc_id}] {chunk.metadata['title']}\n{chunk.content}" for chunk in found_chunks)
     messages = [
         {"role": "system", "content": judge_prompt},
         {"role": "user", "content": f"CÂU HỎI:\n{question}\n\nTÀI LIỆU:\n{context}\n\nCÂU TRẢ LỜI:\n{answer}"},
@@ -108,12 +108,14 @@ def run_evaluation():
     faithfulness_scores = []   #
     total_answerable = 0       
     false_refusals = 0        
+    total_version = 0          # số câu có "expected_doc" (cần trả lời đúng phiên bản)
+    correct_version = 0        # số câu agent ghi đúng doc_id của phiên bản cần dùng
     rows = []                 
     
     refusal_keywords = ["không có thông tin", "chỉ giải đáp", "chỉ trả lời", "không hỗ trợ",
                         "không đủ dữ liệu", "không đủ thông tin"]
 
-    print(f"Bắt ĐẦU CHẤM ĐIỂM{total_questions} CÂU HỎI\n")
+    print(f"Bắt ĐẦU CHẤM ĐIỂM {total_questions} CÂU HỎI\n")
 
     for i, item in enumerate(test_data, 1):
         question = item["question"]
@@ -126,7 +128,6 @@ def run_evaluation():
         result, found_chunks = asyncio.run(ask_agent_real(question, chunks, bm25_index, embeddings))
         agent_answer = result.answer
 
-        # lỗi API thì bỏ qua câu này, không được tính là "từ chối đúng"
         if not result.success:
             print(f"⚠️ ĐÁNH GIÁ: Lỗi khi chạy agent ({agent_answer}), không tính điểm câu này.")
             rows.append({"cau": i, "question": question, "is_answerable": is_answerable,
@@ -158,7 +159,13 @@ def run_evaluation():
                 print("❌ ĐÁNH GIÁ: Từ chối nhầm (quy chế có đáp án nhưng agent không trả lời).")
             else:
                 status = "ANSWERED"
-                # chỉ chấm faithfulness cho câu thật sự trả lời (câu từ chối không có ý nào để chấm)
+                # kiểm tra agent có dùng đúng phiên bản quy định 
+                if item.get("expected_doc"):
+                    total_version += 1
+                    if item["expected_doc"] in agent_answer:
+                        correct_version += 1
+                    else:
+                        status = "WRONG_VERSION"
                 faithfulness = judge_faithfulness(question, found_chunks, agent_answer)
                 print(f"   - Faithfulness: {faithfulness}")
                 if faithfulness is not None:
@@ -168,23 +175,24 @@ def run_evaluation():
                      "status": status, "faithfulness": faithfulness, "answer": agent_answer})   # 
         
         print("-" * 60)
-        time.sleep(20)   # nghỉ 20 giây giữa các câu để không vượt giới hạn 7000 token/phút của Groq (lỗi 429)
-
+        time.sleep(20)  
     print("\n=== BÁO CÁO KẾT QUẢ (REPORT) ===")
     if total_unanswerable > 0:
         refusal_rate = (correct_refusals / total_unanswerable) * 100
         print(f"🎯 Tỷ lệ từ chối đúng (Correct Refusal Rate): {correct_refusals}/{total_unanswerable} ({refusal_rate:.1f}%)")
-    # faithfulness trung bình
+
     if faithfulness_scores:
         average = sum(faithfulness_scores) / len(faithfulness_scores)
         print(f"🎯 Độ trung thực (Faithfulness) trung bình: {average:.2f} (trên {len(faithfulness_scores)} câu)")
-    # tỉ lệ từ chối nhầm
+
     if total_answerable > 0:
         print(f"🎯 Tỷ lệ từ chối nhầm (False Refusal Rate): {false_refusals}/{total_answerable} "
               f"({false_refusals / total_answerable * 100:.1f}%)")
+    if total_version > 0:
+        print(f"🎯 Đúng phiên bản (Version Accuracy): {correct_version}/{total_version} "
+              f"({correct_version / total_version * 100:.1f}%)")
     print(f"🎯 Chế độ truy vấn: {MODE}")
 
-    # ghi kết quả từng câu ra file CSV trong logs/ (mở được bằng Excel)
     csv_path = path / "logs" / f"eval_{MODE}_{datetime.now():%Y%m%d_%H%M%S}.csv"
     csv_path.parent.mkdir(exist_ok=True)
     with open(csv_path, "w", encoding="utf-8-sig", newline="") as f:

@@ -1,6 +1,7 @@
 # Trợ lý điểm rèn luyện và khiếu nại 
 
 Agent trả lời câu hỏi về Quy định đánh giá kết quả rèn luyện của HCMUTE (có trích dẫn doc_id),
+phân biệt 2 phiên bản quy định (bản 2021 và bản sửa đổi 2024, mặc định dùng bản mới nhất),
 tính điểm rèn luyện, và tạo khiếu nại rồi tự kiểm tra lại khiếu nại đã được lưu.
 
 Yêu cầu: **Python 3.11 trở lên**. Nhóm đã chạy thử trên Windows (Python 3.11) và Linux (Python 3.14).
@@ -70,11 +71,18 @@ make eval          # Linux/macOS
 .\run.bat eval     # Windows
 ```
 
-Chạy testset `tests/testset.jsonl` (15 câu, 6 câu phải từ chối) với 2 chế độ truy vấn `hybrid` và `dense`.
-In ra: tỉ lệ từ chối đúng, tỉ lệ từ chối nhầm, faithfulness trung bình.
+Chạy testset `tests/testset.jsonl` (21 câu, 7 câu phải từ chối) với 2 chế độ truy vấn `hybrid` và `dense`.
+In ra: tỉ lệ từ chối đúng, tỉ lệ từ chối nhầm, faithfulness trung bình, tỉ lệ đúng phiên bản
+(câu có trường `expected_doc`: câu trả lời phải ghi đúng doc_id của phiên bản cần dùng).
 Kết quả từng câu lưu ở `logs/eval_<chế độ>_<thời gian>.csv`; USAGE (số lần gọi LLM, token) từng câu lưu ở `logs/run_<thời gian>.jsonl`.
 
-Mỗi chế độ mất khoảng 6–8 phút vì nghỉ 20 giây giữa các câu (giới hạn token/phút của Groq).
+Mỗi chế độ mất khoảng 8–10 phút vì nghỉ 20 giây giữa các câu (giới hạn token/phút của Groq).
+
+Kiểm tra phần cắt chunk (in số chunk và độ dài chunk dài nhất, không cần API key):
+
+```bash
+python -m src.rag.document_parser
+```
 
 Xem nhanh dense và hybrid tìm ra đoạn nào (không gọi LLM, không cần API key):
 
@@ -88,7 +96,7 @@ python -m src.rag.hybrid_search
 |---|---|
 | `run.bat`, `Makefile` | Lệnh cài đặt và chạy (Windows / Linux, macOS) |
 | `demo.py` | Chạy demo: 2 câu mẫu hoặc 1 câu tùy ý |
-| `data/` | Quy chế `HTRL.md` (DOC0007); khiếu nại được lưu ở `data/complaints.jsonl` |
+| `data/` | Quy định bản 2021 `HTRL.md` (DOC0007) và bản sửa đổi 2024 `HTRL_2024.md` (DOC0008, bản giả lập GV cung cấp để kiểm tra phân biệt phiên bản); khiếu nại được lưu ở `data/complaints.jsonl` |
 | `src/rag/` | Cắt chunk, lưu trữ, tìm kiếm dense và hybrid (BM25 + vector, lấy 5 đoạn) |
 | `src/mcp/` | MCP server (5 tool) và MCP client |
 | `src/agent/` | Vòng lặp agent, prompt (`prompts.txt`), schema tool |

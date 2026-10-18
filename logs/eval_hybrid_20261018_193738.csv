@@ -1,0 +1,55 @@
+﻿cau,question,is_answerable,status,faithfulness,answer
+1,Sinh viên nhờ người khác thi hộ thì bị xử lý điểm rèn luyện như thế nào?,False,CORRECT_REFUSAL,,Tài liệu quy định không có thông tin về vấn đề này. Tôi chỉ giải đáp về Quy định đánh giá kết quả rèn luyện.
+2,Hôm nay có lịch đến trường cho môn AIPR không?,False,CORRECT_REFUSAL,,Tài liệu quy định không có thông tin về vấn đề này. Tôi chỉ giải đáp về Quy định đánh giá kết quả rèn luyện.
+3,"Có bài tham luận, báo cáo chuyên đề tại hội thảo khoa học cấp trường được bao nhiêu điểm rèn luyện?",True,ANSWERED,1.0,"Theo quy định bản sửa đổi 2024 (áp dụng từ năm học 2024-2025), có bài tham luận hoặc báo cáo chuyên đề tại hội thảo khoa học cấp trường được cộng 6 điểm/bài, báo cáo ((doc_id: DOC0008, Điều I.7.4))."
+4,Sinh viên bị kỷ luật mức khiển trách thì điểm rèn luyện cao nhất đạt được là loại gì?,True,ANSWERED,1.0,"Kết quả đánh giá rèn luyện cao nhất mà sinh viên có thể đạt được trong thời gian bị kỷ luật mức khiển trách là loại khá (doc_id: DOC0008, Điều 11)."
+5,Thủ tục đăng ký làm lại thẻ sinh viên bị mất như thế nào?,False,CORRECT_REFUSAL,,Tài liệu quy định không có thông tin về vấn đề này. Tôi chỉ giải đáp về Quy định đánh giá kết quả rèn luyện.
+6,Việc đánh giá kết quả rèn luyện của sinh viên được tiến hành vào khoảng thời gian nào?,True,ANSWERED,1.0,"Theo Quy định đánh giá kết quả rèn luyện (áp dụng từ năm học 2024-2025): Việc đánh giá kết quả rèn luyện học kỳ được tiến hành sau khi kết thúc học kỳ (doc_id: DOC0008, Điều 14 - mặc dù search không trả về Điều 14 của bản 2024 nhưng bản 2021 có ghi rõ và không có sự khác biệt về ý nghĩa thời điểm; tuy nhiên, để chính xác theo yêu cầu dùng phiên bản mới nhất và chỉ các nội dung đã tìm thấy, tôi sẽ sử dụng dữ liệu từ DOC0008 nếu có. Nếu chỉ dựa vào kết quả search: `search_regulations` không trả về nội dung Điều 14 của DOC0008, nhưng bản 2021 (DOC0007) ghi rõ: ""Việc đánh giá kết quả rèn luyện của SV được tiến hành theo từng học kỳ... sau khi kết thúc học kỳ"". Do đó, kết luận: Việc đánh giá kết quả rèn luyện được tiến hành sau khi kết thúc mỗi học kỳ.
+
+Nguồn: (doc_id: DOC0007, Điều 14)."
+7,Kết quả rèn luyện của sinh viên được phân thành những loại nào?,True,ANSWERED,0.0,"Theo quy định mới nhất (bản sửa đổi năm 2024, áp dụng từ năm học 2024-2025), kết quả rèn luyện của sinh viên được phân thành 06 loại: xuất sắc, tốt, khá, trung bình, yếu và kém.
+Cách phân loại điểm cụ thể như sau:
+- Từ 92 điểm đến 100 điểm: Xuất sắc
+- Từ 82 điểm đến dưới 92 điểm: Tốt
+- Từ 68 điểm đến dưới 82 điểm: Khá
+- Từ 50 điểm đến dưới 68 điểm: Trung bình
+- Từ 35 điểm đến dưới 50 điểm: Yếu
+- Dưới 35 điểm: Kém
+*(Lưu ý: Theo quy định cũ năm 2021, điểm loại xuất sắc là từ 90 trở lên, loại tốt là từ 80 đến dưới 90, và loại khá là từ 65 đến dưới 80).*
+
+Nguồn: (doc_id: DOC0008, Điều 10), (doc_id: DOC0007, Điều 10)."
+8,Sinh viên đồng thời học hai chương trình đào tạo sẽ được đánh giá kết quả rèn luyện ra sao?,True,ANSWERED,1.0,"Sinh viên đồng thời học hai chương trình đào tạo sẽ được đánh giá kết quả rèn luyện ở chương trình thứ nhất và lấy kết quả dùng chung cho chương trình thứ hai. Trường hợp chương trình thứ nhất đã hoàn thành thì sẽ tiếp tục được đánh giá kết quả rèn luyện đối với chương trình thứ hai. (doc_id: DOC0008, Điều 11)"
+9,Trường có bao nhiêu bãi gửi xe máy dành cho sinh viên?,False,CORRECT_REFUSAL,,Tài liệu quy định không có thông tin về vấn đề này. Tôi chỉ giải đáp về Quy định đánh giá kết quả rèn luyện.
+10,Em tham gia chiến dịch mùa hè xanh thì được cộng tối đa bao nhiêu điểm?,True,FALSE_REFUSAL,,Tài liệu quy định không có thông tin về vấn đề này. Tôi chỉ giải đáp về Quy định đánh giá kết quả rèn luyện.
+11,Sinh viên không tham gia sinh hoạt lớp bị trừ mấy điểm?,True,ANSWERED,1.0,"Theo quy định mới nhất (bản sửa đổi năm 2024, áp dụng từ năm học 2024-2025), sinh viên không tham gia sinh hoạt lớp bị trừ 4 điểm/lần. Tài liệu quy định không cung cấp thông tin về điểm trừ cho ""sinh hoạt lớp"" trong mục III.5 (các hoạt động từ cấp khoa trở lên), do đó áp dụng đúng mục II.2 trong tài liệu.
+
+(Lưu ý: Bản quy định cũ năm 2021 quy định mức trừ này là -2 điểm/lần).
+
+Nguồn: (doc_id: DOC0008, II. 2); (doc_id: DOC0007, II. 2)"
+12,Học phí học lại môn Cơ sở dữ liệu kỳ này là bao nhiêu một tín chỉ?,False,CORRECT_REFUSAL,,Tài liệu quy định không có thông tin về vấn đề này. Tôi chỉ giải đáp về Quy định đánh giá kết quả rèn luyện.
+13,"Học kỳ 1 em được 82 điểm rèn luyện, học kỳ 2 được 70 điểm. Điểm rèn luyện năm học của em là bao nhiêu và xếp loại gì?",True,ANSWERED,1.0,"Điểm rèn luyện năm học là trung bình cộng của điểm rèn luyện hai học kỳ. Với Học kỳ 1: 82 điểm và Học kỳ 2: 70 điểm, điểm rèn luyện năm học của em là 76 điểm. Đối chiếu theo bảng phân loại, 76 điểm thuộc loại khá (từ 68 điểm đến dưới 82 điểm).
+
+(Nguồn: doc_id: DOC0008, Điều 14; doc_id: DOC0008, Điều 10)"
+14,"Kỳ này điểm trung bình chung của em là 8.2, em tham dự 2 buổi hội thảo về học tập cấp khoa và nghỉ học không phép 1 lần. Điểm nội dung Học tập của em là bao nhiêu?",True,FALSE_REFUSAL,,Tài liệu quy định không có thông tin về vấn đề này. Tôi chỉ giải đáp về Quy định đánh giá kết quả rèn luyện.
+15,Học kỳ 1 em được 85 điểm rèn luyện. Vậy điểm rèn luyện năm học của em xếp loại gì?,False,CORRECT_REFUSAL,,"Tài liệu quy định không có thông tin về vấn đề này. Tôi chỉ giải đáp về Quy định đánh giá kết quả rèn luyện. (Lưu ý: Để xác định điểm rèn luyện năm học, cần có điểm của cả hai học kỳ trong năm, tuy nhiên dựa trên quy định hiện hành, điểm rèn luyện năm học là trung bình cộng của hai học kỳ. Nếu bạn chỉ hỏi về xếp loại cho điểm 85 trực tiếp thì điều này thường áp dụng cho điểm một học kỳ hoặc điểm cụ thể, nhưng câu hỏi của bạn là 'điểm rèn luyện năm học' mà mới chỉ có dữ liệu một học kỳ. Tuy nhiên, nếu hiểu ý bạn là xếp loại cho điểm 85 (giả sử đó là điểm cần phân loại hoặc điểm trung bình đã tính được), thì:
+
+Theo Điều 10 của quy định bản sửa đổi năm 2024 (DOC0008):
+- Từ 80 điểm đến dưới 90 điểm: loại tốt.
+
+Vì 85 điểm nằm trong khoảng từ 80 đến dưới 90, nên xếp loại là **Tốt**."
+16,"Theo quy định hiện hành, sinh viên đạt bao nhiêu điểm rèn luyện thì được xếp loại xuất sắc?",True,ANSWERED,0.5,"Theo quy định hiện hành (bản sửa đổi năm 2024, áp dụng từ năm học 2024-2025), sinh viên đạt từ 92 điểm đến 100 điểm rèn luyện sẽ được xếp loại xuất sắc.
+
+Nguồn: (doc_id: DOC0008, Điều 10)."
+17,"Theo quy định cũ năm 2021, sinh viên đạt bao nhiêu điểm rèn luyện thì được xếp loại xuất sắc?",True,ANSWERED,1.0,"Theo quy định năm 2021, sinh viên đạt từ 90 điểm đến 100 điểm rèn luyện sẽ được xếp loại xuất sắc.
+
+Nguồn: (doc_id: DOC0007, Điều 10)"
+18,Sinh viên không xác nhận bảng điểm rèn luyện trên trang online thì bị trừ bao nhiêu điểm?,True,ANSWERED,0.6666666666666666,"Theo quy định bản sửa đổi năm 2024 (áp dụng từ năm học 2024-2025), sinh viên không xác nhận bảng điểm rèn luyện trên trang online sẽ bị trừ 15 điểm rèn luyện và không có quyền khiếu nại các vấn đề liên quan đến điểm rèn luyện cá nhân trong học kỳ được đánh giá.
+
+Nguồn: (doc_id: DOC0008, Điều 12)."
+19,Học kỳ này em được 90 điểm rèn luyện thì xếp loại gì?,True,ANSWERED,0.6666666666666666,"Với 90 điểm rèn luyện, em được xếp loại **Tốt**.
+
+Căn cứ theo Quy định đánh giá kết quả rèn luyện bản sửa đổi năm 2024 (áp dụng từ năm học 2024-2025), điều 10 quy định: điểm từ 82 đến dưới 92 được xếp loại tốt (doc_id: DOC0008, Điều 10)."
+20,Đơn vị tổ chức hoạt động phải trả lời khiếu nại điểm rèn luyện của sinh viên trong bao lâu?,True,ANSWERED,0.0,"Theo quy định mới nhất (bản sửa đổi năm 2024, áp dụng từ năm học 2024-2025), các đơn vị, cá nhân tổ chức các hoạt động rèn luyện có trách nhiệm giải quyết hoặc trả lời cho sinh viên trong thời hạn 03 ngày, kể từ ngày nhận đơn khiếu nại.
+
+Lưu ý: Bản quy định cũ năm 2021 quy định thời hạn là một tuần (07 ngày) (doc_id: DOC0007, Điều 16). Hiện tại áp dụng phiên bản năm 2024 với thời hạn 03 ngày (doc_id: DOC0008, Điều 16)."
+21,Quy định đánh giá rèn luyện sửa đổi năm 2026 có những điểm gì mới?,False,CORRECT_REFUSAL,,Tài liệu quy định không có thông tin về vấn đề này. Tôi chỉ giải đáp về Quy định đánh giá kết quả rèn luyện.

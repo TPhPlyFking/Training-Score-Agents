@@ -60,7 +60,8 @@ def parse_htrl_document (filepath: str, doc_id: str, title: str,
 
 
 DOCUMENTS = [
-    ("DOC0007", "HTRL.md", "Quy định đánh giá kết quả rèn luyện", "2021-2022", "Trường ĐH SPKT TP.HCM"),
+    ("DOC0007", "HTRL.md", "Quy định đánh giá kết quả rèn luyện - bản năm 2021 (áp dụng từ năm học 2021-2022)", "2021-2022", "Trường ĐH SPKT TP.HCM"),
+    ("DOC0008", "HTRL_2024.md", "Quy định đánh giá kết quả rèn luyện - bản sửa đổi năm 2024 (áp dụng từ năm học 2024-2025)", "2024-2025", "Trường ĐH SPKT TP.HCM"),
 ]
 
 def load_all_documents() -> list[DocumentChunk]:
