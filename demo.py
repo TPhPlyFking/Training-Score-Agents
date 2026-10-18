@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parent
 
 # Câu hỏi mẫu: câu 1 thử tra cứu quy định (tầng a), câu 2 thử tạo khiếu nại + xác minh (tầng c)
 SAMPLE_QUESTIONS = [
-    "Sinh viên bị kỷ luật mức khiển trách thì điểm rèn luyện cao nhất đạt loại gì?",
+    "Sinh viên bị hút thuốc trong trường có bị gì không",
     "Em là sinh viên mã số 22110001. Điểm hoạt động tình nguyện học kỳ 1 của em chưa được cộng, "
     "em muốn tạo đơn khiếu nại.",
 ]
