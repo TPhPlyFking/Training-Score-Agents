@@ -13,8 +13,7 @@ Nhóm có dùng công cụ AI để hỗ trợ viết và sửa code. Mọi đo�
 | Claude | `src/rag/hybrid_search.py` | "Thêm chế độ dense, đề yêu cầu ≥ 2 chế độ" | Tham số `mode`; đổi `print` ra stderr |
 | Claude | `tests/eval.py` | "Sửa lỗi lỗi API bị tính là từ chối đúng, thêm faithfulness" | Bỏ qua câu lỗi API; hàm `judge_faithfulness` (LLM-as-a-judge); đếm từ chối nhầm; ghi CSV; chọn chế độ truy vấn |
 | Claude | `tests/testset.jsonl`, `tests/prompts/judge_faithfulness.txt` | "Kiểm tra đáp án testset, thêm câu tầng (b)" | Sửa đáp án câu 1; thêm 3 câu tính toán / thiếu dữ liệu; prompt chấm faithfulness |
-| Claude | `data/HTRL_2024.md`, `src/rag/document_parser.py`, `tests/eval.py`, `tests/testset.jsonl`, `README.md` | "Thầy yêu cầu thêm phiên bản mới hơn của quy định, so sánh 2 bản và sửa code" | So sánh 2 bản để liệt kê chỗ khác nhau; thêm dòng `DOC0008` và ghi năm áp dụng vào tiêu đề; thêm chỉ số đúng phiên bản (`expected_doc`) trong eval; sửa đáp án 5 câu theo bản 2024 và thêm 6 câu về phiên bản |
-
+| Claude | `data/HTRL_2024.md`, `src/rag/document_parser.py`, `tests/eval.py`, `tests/testset.jsonl`, `README.md` | "Thầy yêu cầu thêm phiên bản mới hơn của quy định, so sánh 
 ## TV2 – MCP & Nghiệp vụ
 
 | Công cụ | Phần áp dụng | Yêu cầu chính (prompt) | Code do AI sinh / sửa |
